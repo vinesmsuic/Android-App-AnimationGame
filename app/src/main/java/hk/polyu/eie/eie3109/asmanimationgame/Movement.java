@@ -15,8 +15,8 @@ public class Movement {
     private int xSpeed = randomNum;
     private int ySpeed = randomNum;
 
-    private int xDirection = X_DIRECTION_RIGHT;
-    private int yDirection = Y_DIRECTION_DOWN;
+    private int xDirection = getRandomDirection();
+    private int yDirection = getRandomDirection();
 
     public void setXYSpeed(int x, int y){
         this.xSpeed = x;
@@ -26,6 +26,12 @@ public class Movement {
     public void setDirections(int xDirection, int yDirection){
         this.xDirection = xDirection;
         this.yDirection = yDirection;
+    }
+
+    private int getRandomDirection(){
+        //Set random Direction
+        int randomIndex = new Random().nextInt( 2 )+1;
+        return randomIndex-1;
     }
 
     public void toggleXDirection() {

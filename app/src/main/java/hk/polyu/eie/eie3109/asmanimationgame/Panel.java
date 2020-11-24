@@ -26,6 +26,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
         thread = new GameThread(getHolder(), this);
 
+
+
         setFocusable(true);
 
     }
@@ -36,7 +38,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
         Coordinates coords;
         int x, y;
-        canvas.drawColor(Color.BLACK);
+        canvas.drawColor(Color.WHITE);
         for(GraphicObject graphic: graphics){
             coords = graphic.getCoordinates();
             x = coords.getX();

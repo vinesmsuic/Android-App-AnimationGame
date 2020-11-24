@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -18,6 +21,13 @@ public class SplashScreen extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        /*
+        ImageView myImageView= findViewById(R.id.chenWaiting);
+        Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        myImageView.startAnimation(myFadeInAnimation); //Set animation to your ImageView
+        */
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -29,4 +39,5 @@ public class SplashScreen extends AppCompatActivity {
             }
         }, 3000);
     }
+
 }
