@@ -25,4 +25,6 @@ public class GraphicObject {
     public Movement getMovement(){
         return movement;
     }
+
+    public void setGraphic(Bitmap bitmap) { this.bitmap = bitmap;}
 }

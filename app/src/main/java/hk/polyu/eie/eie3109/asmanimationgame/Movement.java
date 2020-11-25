@@ -9,11 +9,12 @@ public class Movement {
     public static final int Y_DIRECTION_DOWN = 1;
     public static final int Y_DIRECTION_UP = -1;
 
-    private int randomNum = new Random().nextInt(10) + 1;
+    private int randomNum = new Random().nextInt(10) + 9;
 
     //x and y speed should be the same otherwise the movement looks so weird
     private int xSpeed = randomNum;
     private int ySpeed = randomNum;
+
 
     private int xDirection = getRandomDirection();
     private int yDirection = getRandomDirection();

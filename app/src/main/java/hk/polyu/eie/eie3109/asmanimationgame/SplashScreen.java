@@ -3,6 +3,8 @@ package hk.polyu.eie.eie3109.asmanimationgame;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.Animation;
@@ -21,6 +23,8 @@ public class SplashScreen extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         /*
         ImageView myImageView= findViewById(R.id.chenWaiting);
         Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
@@ -32,7 +36,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
 
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                Intent i = new Intent(getApplicationContext(),TitleScreen.class);
                 startActivity(i);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();

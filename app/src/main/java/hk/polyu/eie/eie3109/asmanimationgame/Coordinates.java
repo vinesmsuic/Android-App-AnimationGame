@@ -2,6 +2,8 @@ package hk.polyu.eie.eie3109.asmanimationgame;
 
 import android.graphics.Bitmap;
 
+import java.util.Random;
+
 public class Coordinates {
     private int x = 100;
     private int y = 0;
@@ -25,5 +27,10 @@ public class Coordinates {
 
     public int getY(){
         return y + bitmap.getHeight()/2;
+    }
+
+    public void setRandomXY(){
+        this.x = new Random().nextInt(1000);
+        this.y = new Random().nextInt(1000);
     }
 }

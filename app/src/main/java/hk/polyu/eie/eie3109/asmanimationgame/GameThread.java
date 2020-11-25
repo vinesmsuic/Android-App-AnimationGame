@@ -1,5 +1,6 @@
 package hk.polyu.eie.eie3109.asmanimationgame;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
@@ -22,6 +23,7 @@ public class GameThread extends Thread{
         return surfaceHolder;
     }
 
+    @SuppressLint("WrongCall")
     @Override
     public void run(){
         super.run();
