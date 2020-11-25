@@ -3,6 +3,7 @@ package hk.polyu.eie.eie3109.asmanimationgame;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,6 +22,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Panel extends SurfaceView implements SurfaceHolder.Callback {
+
+    public static int MODE = Context.MODE_PRIVATE;
+    public static final String PREFERENCE_NAME = "SaveSetting";
 
     private Bitmap bmp;
     private GameThread thread;
@@ -62,6 +66,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         paint.setTextSize(60);
         canvas.drawText(player.getHealthText(), 10, 75, paint);
         canvas.drawText(player.getLevelText(), 900, 75, paint);
+        canvas.drawText("Gold: " + player.getGold(), 700, 75, paint);
         canvas.drawText("Score: "+score*10, 450, 75, paint);
 
         canvas.drawBitmap(player.getGraphic(), getWidth()/2-(player.getGraphic().getWidth()/2), getHeight()-(player.getGraphic().getHeight()/2)-100, null);
@@ -139,6 +144,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                                 //npcs.remove(n); //Causing java.util.ConcurrentModificationException
                                 killedNpc = npcs.indexOf(n);
                                 player.gainExp(n.getExp());
+                                player.setGold(player.getGold() + 5);
                                 score+=5;
                                 if(npcs.size() < 2)
                                 {
@@ -218,7 +224,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                 movement.toggleYDirection();
                 coord.setY(y + getHeight() - (y+graphic.getGraphic().getHeight()));
                 //if(x > getWidth()/2-(player.getGraphic().getWidth()/2) && x < getWidth()/2+(player.getGraphic().getWidth()/2))
-                    player.setHealth(player.getHealth()-100);
+                    player.setHealth(player.getHealth()-40);
 
             } else {
                 coord.setY(y);
@@ -227,8 +233,55 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void gameOver(){
+        clearStatus();
         ((Activity)context).startActivity(new Intent(context, TitleScreen.class));
         ((Activity)context).finish();
+    }
+
+    private void savePreferences(){
+        //Open the sharedPreferences editor and save
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, MODE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        //Key value pairs
+        editor.putInt("Level", player.getLevel());
+        editor.putInt("Health", player.getHealth());
+        editor.putInt("MaxHealth", player.getMaxHealth());
+        editor.putInt("Attack", player.getAttack());
+        editor.putInt("Score", score);
+        editor.putInt("Exp", player.getExp());
+        editor.putInt("Gold", player.getGold());
+        editor.apply();
+    }
+
+    private void loadPreferences(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, MODE);
+
+        //Second param: Return that default value when there is no matching key.
+        int attack = sharedPreferences.getInt("Attack", 1);
+        int level = sharedPreferences.getInt("Level", 1);
+        int health = sharedPreferences.getInt("Health", 100);
+        int maxHealth = sharedPreferences.getInt("MaxHealth", 100);
+        int exp = sharedPreferences.getInt("Exp", 0);
+        int gold = sharedPreferences.getInt("Gold", 0);
+
+        player.setAttack(attack);
+        player.setHealth(health);
+        player.setMaxHealth(maxHealth);
+        player.setLevel(level);
+        player.setExp(exp);
+        player.setGold(gold);
+        score = sharedPreferences.getInt("Score", 0);
+    }
+
+    public void clearStatus(){
+        score = 0;
+        player.setExp(0);
+        player.setGold(0);
+        player.setMaxHealth(100);
+        player.setHealth(100);
+        player.setAttack(1);
+        player.setLevel(1);
     }
 
     @Override
@@ -266,13 +319,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
             if (imageHeight > maxHeight)
                 imageHeight = maxHeight;
-            int imageWidth = (imageHeight * image.getWidth())
-                    / image.getHeight();
+            int imageWidth = (imageHeight * image.getWidth()) / image.getHeight();
 
             if (imageWidth > maxWidth) {
                 imageWidth = maxWidth;
-                imageHeight = (imageWidth * image.getHeight())
-                        / image.getWidth();
+                imageHeight = (imageWidth * image.getHeight()) / image.getWidth();
             }
 
             if (imageHeight > maxHeight)

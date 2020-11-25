@@ -9,6 +9,7 @@ public class Player{
     private int exp = 0;
     private int level = 1;
     private Bitmap bitmap;
+    private int gold = 0;
 
     public Player(Bitmap bitmap){
         this.bitmap = bitmap;
@@ -23,6 +24,18 @@ public class Player{
         String msg = "Lv." + this.level;
         return msg;
     }
+
+    public void setGold(int gold) {this.gold = gold;}
+
+    public int getGold() {return gold;}
+
+    public void setLevel(int level) {this.level = level;}
+
+    public int getLevel() {return level;}
+
+    public void setExp(int exp) {this.exp = exp;}
+
+    public int getExp() {return exp;}
 
     public void setMaxHealth(int maxHealth){ this.maxHealth = maxHealth; }
 

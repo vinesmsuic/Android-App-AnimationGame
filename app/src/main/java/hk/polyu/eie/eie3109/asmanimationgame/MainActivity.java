@@ -2,7 +2,9 @@ package hk.polyu.eie.eie3109.asmanimationgame;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(panel);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
 
         // Hide ActionBar - https://www.codevoila.com/post/76/5-ways-to-hide-android-actionbar
         if (getSupportActionBar() != null) {
