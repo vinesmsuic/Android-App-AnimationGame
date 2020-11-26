@@ -42,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
         stopService(new Intent(this, MusicService.class));
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(getApplicationContext(),LevelSelect.class);
+        startActivity(i);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
+    }
+
 
 }
 

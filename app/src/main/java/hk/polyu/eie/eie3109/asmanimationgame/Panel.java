@@ -20,16 +20,17 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
 
 public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int MODE = Context.MODE_PRIVATE;
     public static final String PREFERENCE_NAME = "SaveSetting";
+    public static Player player;
 
     private Bitmap bmp;
     private GameThread thread;
     private ArrayList<NonPlayerObject> npcs = new ArrayList<NonPlayerObject>();
-    public Player player;
     private Bitmap bg;
     private int score = 0;
     Context context = null;
@@ -47,6 +48,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
         setFocusable(true);
         spawnRandomMonster(true);
+        loadPreferences();
     }
 
     @Override
@@ -66,10 +68,24 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         paint.setTextSize(60);
         canvas.drawText(player.getHealthText(), 10, 75, paint);
         canvas.drawText(player.getLevelText(), 900, 75, paint);
-        canvas.drawText("Gold: " + player.getGold(), 700, 75, paint);
         canvas.drawText("Score: "+score*10, 450, 75, paint);
 
         canvas.drawBitmap(player.getGraphic(), getWidth()/2-(player.getGraphic().getWidth()/2), getHeight()-(player.getGraphic().getHeight()/2)-100, null);
+
+
+        if(player.getLevel() > 5){
+            thread.setRunning(false);
+
+            canvas.drawText("CLEAR!", getWidth()/2-200, getHeight()/2, paint);
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    gameLevelClear();
+                }
+            };
+            Timer timer = new Timer("Timer");
+            timer.schedule(task, 2000);
+
+        }
 
         if(player.isKilled()){
             thread.setRunning(false);
@@ -230,6 +246,12 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                 coord.setY(y);
             }
         }
+    }
+
+    public void gameLevelClear(){
+        savePreferences();
+        ((Activity)context).startActivity(new Intent(context, LevelSelect.class));
+        ((Activity)context).finish();
     }
 
     public void gameOver(){
