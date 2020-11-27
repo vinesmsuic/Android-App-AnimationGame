@@ -37,7 +37,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     Context context = null;
     private int gameLevel = 0;
     private int killCount = 0;
-    private int requireKills = new Random().nextInt(5) + 20;
+    private int requireKills = new Random().nextInt(5) + 5;
 
     private int gameLevel1Cleared = 0;
     private int gameLevel2Cleared = 0;

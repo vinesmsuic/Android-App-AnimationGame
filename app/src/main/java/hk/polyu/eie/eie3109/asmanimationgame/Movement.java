@@ -1,6 +1,5 @@
 package hk.polyu.eie.eie3109.asmanimationgame;
 
-
 import java.util.Random;
 
 public class Movement {
@@ -9,7 +8,7 @@ public class Movement {
     public static final int Y_DIRECTION_DOWN = 1;
     public static final int Y_DIRECTION_UP = -1;
 
-    private int randomNum = new Random().nextInt(10) + 9;
+    private int randomNum = new Random().nextInt(10) + 40;
 
     //x and y speed should be the same otherwise the movement looks so weird
     private int xSpeed = randomNum;
