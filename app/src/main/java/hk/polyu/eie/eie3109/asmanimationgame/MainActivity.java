@@ -12,14 +12,16 @@ import android.util.DisplayMetrics;
 
 public class MainActivity extends AppCompatActivity {
 
-    int gameLevel = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        receiveGameLevel();
+        int gameLevel = 0;
+        Intent i = getIntent();
+        gameLevel = i.getIntExtra("gameLevel",0);
 
         if(gameLevel > 0)
         {
@@ -40,11 +42,6 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-    }
-
-    private void receiveGameLevel() {
-        Intent i = getIntent();
-        gameLevel = i.getIntExtra("gameLevel",0);
     }
 
     @Override

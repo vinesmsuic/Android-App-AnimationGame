@@ -300,6 +300,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void gameLevelClear(){
+        levelClear();
         savePreferences();
         ((Activity)context).startActivity(new Intent(context, LevelSelect.class));
         ((Activity)context).finish();
@@ -317,6 +318,20 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, MODE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        //Key value pairs
+        editor.putInt("Level", player.getLevel());
+        editor.putInt("Health", player.getHealth());
+        editor.putInt("MaxHealth", player.getMaxHealth());
+        editor.putInt("Attack", player.getAttack());
+        editor.putInt("Score", score);
+        editor.putInt("Exp", player.getExp());
+        editor.putInt("Gold", player.getGold());
+        editor.apply();
+    }
+
+    private void levelClear(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, MODE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         switch (gameLevel){
             case 1:
                 editor.putInt("gameLevel1Cleared", gameLevel1Cleared+1);
@@ -328,15 +343,6 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                 editor.putInt("gameLevel3Cleared", gameLevel3Cleared+1);
                 break;
         }
-
-        //Key value pairs
-        editor.putInt("Level", player.getLevel());
-        editor.putInt("Health", player.getHealth());
-        editor.putInt("MaxHealth", player.getMaxHealth());
-        editor.putInt("Attack", player.getAttack());
-        editor.putInt("Score", score);
-        editor.putInt("Exp", player.getExp());
-        editor.putInt("Gold", player.getGold());
         editor.apply();
     }
 

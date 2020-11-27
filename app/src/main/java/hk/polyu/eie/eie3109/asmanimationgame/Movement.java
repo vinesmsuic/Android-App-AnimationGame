@@ -8,7 +8,7 @@ public class Movement {
     public static final int Y_DIRECTION_DOWN = 1;
     public static final int Y_DIRECTION_UP = -1;
 
-    private int randomNum = new Random().nextInt(10) + 40;
+    private int randomNum = new Random().nextInt(3) + 18;
 
     //x and y speed should be the same otherwise the movement looks so weird
     private int xSpeed = randomNum;
