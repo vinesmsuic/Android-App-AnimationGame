@@ -26,14 +26,23 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int MODE = Context.MODE_PRIVATE;
     public static final String PREFERENCE_NAME = "SaveSetting";
-    public static Player player;
+    public Player player;
 
     private Bitmap bmp;
+    private Bitmap bmpHurt;
     private GameThread thread;
     private ArrayList<NonPlayerObject> npcs = new ArrayList<NonPlayerObject>();
     private Bitmap bg;
     private int score = 0;
     Context context = null;
+    private int gameLevel = 0;
+    private int killCount = 0;
+    private int requireKills = new Random().nextInt(5) + 20;
+
+    private int gameLevel1Cleared = 0;
+    private int gameLevel2Cleared = 0;
+    private int gameLevel3Cleared = 0;
+
 
     public Panel(Context context) {
         super(context);
@@ -41,8 +50,46 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
 
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.m_puppet);
+        bmpHurt = BitmapFactory.decodeResource(getResources(), R.drawable.m_puppet_dead);
         bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg_demonic_crop);
         player = new Player(resizeImage(BitmapFactory.decodeResource(getResources(), R.drawable.chen_fighter),500,500));
+
+        thread = new GameThread(getHolder(), this);
+
+        setFocusable(true);
+        spawnRandomMonster(true);
+        loadPreferences();
+    }
+
+    public Panel(Context context, int gameLevel) {
+        super(context);
+        this.context = context;
+        getHolder().addCallback(this);
+
+        this.gameLevel = gameLevel;
+
+        switch (gameLevel)
+        {
+            case 1:
+                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.m_slime);
+                bmpHurt = BitmapFactory.decodeResource(getResources(), R.drawable.m_slime_dead);
+                bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg_grass_croped);
+                break;
+            case 2:
+                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.m_bat);
+                bmpHurt = BitmapFactory.decodeResource(getResources(), R.drawable.m_bat_dead);
+                bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg_demonic_crop);
+                break;
+            case 3:
+                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.m_puppet);
+                bmpHurt = BitmapFactory.decodeResource(getResources(), R.drawable.m_puppet_dead);
+                bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg_boss_crop);
+                //I want to
+                break;
+                //free
+        }
+        player = new Player(resizeImage(BitmapFactory.decodeResource(getResources(), R.drawable.chen_fighter),500,500));
+        player.setXLocation(400);
 
         thread = new GameThread(getHolder(), this);
 
@@ -66,17 +113,16 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setTextSize(60);
-        canvas.drawText(player.getHealthText(), 10, 75, paint);
-        canvas.drawText(player.getLevelText(), 900, 75, paint);
-        canvas.drawText("Score: "+score*10, 450, 75, paint);
+        canvas.drawText(player.getHealthText(), 10, 90, paint);
+        canvas.drawText(player.getLevelText(), 900, 90, paint);
+        canvas.drawText("Score: "+score*10, 400, 90, paint);
 
-        canvas.drawBitmap(player.getGraphic(), getWidth()/2-(player.getGraphic().getWidth()/2), getHeight()-(player.getGraphic().getHeight()/2)-100, null);
+        canvas.drawBitmap(player.getGraphic(), player.getXLocation(), getHeight()-(player.getGraphic().getHeight()/2)-100, null);
 
-
-        if(player.getLevel() > 5){
+        if(killCount > requireKills){
             thread.setRunning(false);
 
-            canvas.drawText("CLEAR!", getWidth()/2-200, getHeight()/2, paint);
+            canvas.drawText("CLEAR!", getWidth()/2-100, getHeight()/2, paint);
             TimerTask task = new TimerTask() {
                 public void run() {
                     gameLevelClear();
@@ -90,7 +136,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         if(player.isKilled()){
             thread.setRunning(false);
 
-            canvas.drawText("GAME OVER", getWidth()/2-200, getHeight()/2, paint);
+            canvas.drawText("GAME OVER", getWidth()/2-100, getHeight()/2, paint);
             TimerTask task = new TimerTask() {
                 public void run() {
                     gameOver();
@@ -116,6 +162,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
 
+                player.setXLocation(x-250);
+
                 int killedNpc = -1;
 
                 if(npcs.size() > 0)
@@ -129,16 +177,16 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
                         if(gX <= x && x <= (gX + gW) && gY <= y && y <= (gY + gH)){
                             score+=1;
-                            n.receivedDmg(1);
+                            n.receivedDmg(player.getAttack());
 
                             TimerTask task = new TimerTask() {
                                 public void run() {
                                     //Do something...
-                                    n.setGraphic(BitmapFactory.decodeResource(getResources(), R.drawable.m_puppet_dead));
+                                    n.setGraphic(bmpHurt);
                                     TimerTask taskHit = new TimerTask() {
                                         public void run() {
                                             //Do something...
-                                            n.setGraphic(BitmapFactory.decodeResource(getResources(), R.drawable.m_puppet));
+                                            n.setGraphic(bmp);
                                         }
                                     };
                                     Timer timer = new Timer("Timer");
@@ -169,6 +217,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                             }
                             if(killedNpc != -1)
                             {
+                                killCount++;
                                 npcs.remove(killedNpc);
                             }
                             return true;
@@ -201,6 +250,8 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                 //Create new graphic
                 NonPlayerObject monster = new NonPlayerObject(bmp);
                 monster.getCoordinates().setRandomXY();
+                monster.setHealth((new Random().nextInt(3) + 1)* gameLevel + player.getLevel()) ;
+                monster.setAttack(20*gameLevel - player.getLevel() + new Random().nextInt(5));
                 npcs.add(monster);
             }
         };
@@ -215,18 +266,18 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
         int x, y;
 
-        for(GraphicObject graphic: npcs) {
-            coord = graphic.getCoordinates();
-            movement = graphic.getMovement();
+        for(NonPlayerObject n : npcs) {
+            coord = n.getCoordinates();
+            movement = n.getMovement();
 
             x = (movement.getXDirection()==Movement.X_DIRECTION_RIGHT)?coord.getX()+movement.getXSpeed():coord.getX()-movement.getXSpeed();
             //check x if reaches border
             if(x < 0) {
                 movement.toggleXDirection();
                 coord.setX(-x);
-            } else if(x + graphic.getGraphic().getWidth() > getWidth()) {
+            } else if(x + n.getGraphic().getWidth() > getWidth()) {
                 movement.toggleXDirection();
-                coord.setX(x + getWidth() - (x+graphic.getGraphic().getWidth()));
+                coord.setX(x + getWidth() - (x+n.getGraphic().getWidth()));
             } else {
                 coord.setX(x);
             }
@@ -236,11 +287,11 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
             if(y < 0) { //Collide top border
                 movement.toggleYDirection();
                 coord.setY(-y);
-            } else if(y + graphic.getGraphic().getHeight() > getHeight()) { //Collide bottom border
+            } else if(y + n.getGraphic().getHeight() > getHeight()) { //Collide bottom border
                 movement.toggleYDirection();
-                coord.setY(y + getHeight() - (y+graphic.getGraphic().getHeight()));
-                //if(x > getWidth()/2-(player.getGraphic().getWidth()/2) && x < getWidth()/2+(player.getGraphic().getWidth()/2))
-                    player.setHealth(player.getHealth()-40);
+                coord.setY(y + getHeight() - (y+n.getGraphic().getHeight()));
+                if(x > player.getXLocation()-50 && x < (player.getXLocation()+(player.getGraphic().getWidth()/3)))
+                    player.setHealth(player.getHealth() - n.getAttack());
 
             } else {
                 coord.setY(y);
@@ -256,6 +307,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
     public void gameOver(){
         clearStatus();
+        savePreferences();
         ((Activity)context).startActivity(new Intent(context, TitleScreen.class));
         ((Activity)context).finish();
     }
@@ -264,6 +316,18 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         //Open the sharedPreferences editor and save
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, MODE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        switch (gameLevel){
+            case 1:
+                editor.putInt("gameLevel1Cleared", gameLevel1Cleared+1);
+                break;
+            case 2:
+                editor.putInt("gameLevel2Cleared", gameLevel2Cleared+1);
+                break;
+            case 3:
+                editor.putInt("gameLevel3Cleared", gameLevel3Cleared+1);
+                break;
+        }
 
         //Key value pairs
         editor.putInt("Level", player.getLevel());
@@ -293,7 +357,13 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         player.setLevel(level);
         player.setExp(exp);
         player.setGold(gold);
+
+
         score = sharedPreferences.getInt("Score", 0);
+        gameLevel1Cleared = sharedPreferences.getInt("gameLevel1Cleared", 0);
+        gameLevel2Cleared = sharedPreferences.getInt("gameLevel2Cleared", 0);
+        gameLevel3Cleared = sharedPreferences.getInt("gameLevel3Cleared", 0);
+
     }
 
     public void clearStatus(){
@@ -304,6 +374,22 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         player.setHealth(100);
         player.setAttack(1);
         player.setLevel(1);
+
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, MODE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //Key value pairs
+        editor.putInt("gameLevel1Cleared", 0);
+        editor.putInt("gameLevel2Cleared", 0);
+        editor.putInt("gameLevel3Cleared", 0);
+        editor.putInt("Level", 1);
+        editor.putInt("Health", 100);
+        editor.putInt("MaxHealth", 100);
+        editor.putInt("Attack", 1);
+        editor.putInt("Score", 0);
+        editor.putInt("Exp", 0);
+        editor.putInt("Gold", 0);
+        editor.apply();
     }
 
     @Override

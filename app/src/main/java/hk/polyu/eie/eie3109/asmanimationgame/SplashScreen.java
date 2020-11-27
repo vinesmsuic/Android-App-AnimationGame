@@ -25,13 +25,6 @@ public class SplashScreen extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        /*
-        ImageView myImageView= findViewById(R.id.chenWaiting);
-        Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        myImageView.startAnimation(myFadeInAnimation); //Set animation to your ImageView
-        */
-
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

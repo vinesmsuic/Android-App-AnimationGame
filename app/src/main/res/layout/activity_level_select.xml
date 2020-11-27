@@ -19,18 +19,6 @@
         app:srcCompat="@drawable/title_plain" />
 
     <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="337dp"
-        android:layout_height="128dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.113"
-        app:srcCompat="@drawable/box" />
-
-    <ImageView
         android:id="@+id/imageView8"
         android:layout_width="442dp"
         android:layout_height="550dp"
@@ -42,8 +30,68 @@
         app:layout_constraintVertical_bias="0.83"
         app:srcCompat="@drawable/box" />
 
+    <ImageButton
+        android:id="@+id/btnLevel1"
+        style="@android:style/Widget.ImageButton"
+        android:background="@android:color/transparent"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.177"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.458"
+        app:srcCompat="@drawable/bg_grass" />
+
+    <ImageButton
+        android:id="@+id/btnLevel2"
+        style="@android:style/Widget.ImageButton"
+        android:background="@android:color/transparent"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.826"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.458"
+        app:srcCompat="@drawable/bg_demonic" />
+
+    <ImageButton
+        android:id="@+id/btnLevel3"
+        style="@android:style/Widget.ImageButton"
+        android:background="@android:color/transparent"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.177"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.751"
+        app:srcCompat="@drawable/bg_boss" />
+
+    <ImageButton
+        android:id="@+id/btnShop"
+        style="@android:style/Widget.ImageButton"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.826"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.751"
+        app:srcCompat="@drawable/bg_shop" />
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtLevelSelect"
         android:layout_width="357dp"
         android:layout_height="111dp"
         android:gravity="center"
@@ -62,62 +110,66 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView6"
-        app:layout_constraintVertical_bias="0.198" />
+        app:layout_constraintVertical_bias="0.293" />
 
-    <ImageButton
-        android:id="@+id/btnLevel1"
-        style="@android:style/Widget.ImageButton"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:scaleType="centerCrop"
+    <TextView
+        android:id="@+id/txtShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shop"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnShop"
+        app:layout_constraintEnd_toEndOf="@+id/btnShop"
+        app:layout_constraintStart_toStartOf="@+id/btnShop"
+        app:layout_constraintTop_toTopOf="@+id/btnShop" />
+
+    <TextView
+        android:id="@+id/txtLevel1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Level 1"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnLevel1"
+        app:layout_constraintEnd_toEndOf="@+id/btnLevel1"
+        app:layout_constraintStart_toStartOf="@+id/btnLevel1"
+        app:layout_constraintTop_toTopOf="@+id/btnLevel1" />
+
+    <TextView
+        android:id="@+id/txtLevel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Level 2"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnLevel2"
+        app:layout_constraintEnd_toEndOf="@+id/btnLevel2"
+        app:layout_constraintStart_toStartOf="@+id/btnLevel2"
+        app:layout_constraintTop_toTopOf="@+id/btnLevel2" />
+
+    <TextView
+        android:id="@+id/txtLevel3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Level 3"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnLevel3"
+        app:layout_constraintEnd_toEndOf="@+id/btnLevel3"
+        app:layout_constraintStart_toStartOf="@+id/btnLevel3"
+        app:layout_constraintTop_toTopOf="@+id/btnLevel3" />
+
+    <Button
+        android:id="@+id/btnEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ending (and Reset Progress)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.177"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.458"
-        app:srcCompat="@drawable/bg_grass" />
-
-    <ImageButton
-        android:id="@+id/btnLevel2"
-        style="@android:style/Widget.ImageButton"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.826"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.458"
-        app:srcCompat="@drawable/bg_demonic" />
-
-    <ImageButton
-        android:id="@+id/btnLevel3"
-        style="@android:style/Widget.ImageButton"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.177"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.751"
-        app:srcCompat="@drawable/bg_boss" />
-
-    <ImageButton
-        android:id="@+id/btnShop"
-        style="@android:style/Widget.ImageButton"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.826"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.751"
-        app:srcCompat="@drawable/bg_shop" />
+        app:layout_constraintVertical_bias="0.913" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

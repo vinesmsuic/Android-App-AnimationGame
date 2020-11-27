@@ -12,14 +12,26 @@ import android.util.DisplayMetrics;
 
 public class MainActivity extends AppCompatActivity {
 
+    int gameLevel = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-        Panel panel = new Panel(this);
+        receiveGameLevel();
 
-        setContentView(panel);
+        if(gameLevel > 0)
+        {
+            Panel panel = new Panel(this, gameLevel);
+            setContentView(panel);
+        }
+        else
+        {
+            //Test Level
+            Panel panel = new Panel(this);
+            setContentView(panel);
+        }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -28,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+    }
+
+    private void receiveGameLevel() {
+        Intent i = getIntent();
+        gameLevel = i.getIntExtra("gameLevel",0);
     }
 
     @Override
@@ -44,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(),LevelSelect.class);
-        startActivity(i);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        finish();
+//        Intent i = new Intent(getApplicationContext(),LevelSelect.class);
+//        startActivity(i);
+//        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//        finish();
     }
 
 

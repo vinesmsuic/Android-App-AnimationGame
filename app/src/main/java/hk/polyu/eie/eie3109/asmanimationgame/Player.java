@@ -10,10 +10,15 @@ public class Player{
     private int level = 1;
     private Bitmap bitmap;
     private int gold = 0;
+    private int xLocation;
 
     public Player(Bitmap bitmap){
         this.bitmap = bitmap;
     }
+
+    public int getXLocation() {return xLocation;}
+
+    public void setXLocation(int xLocation) {this.xLocation = xLocation;}
 
     public String getHealthText(){
         String msg = "HP: " + getHealth() + "/" + getMaxHealth();
@@ -57,7 +62,7 @@ public class Player{
         level++;
         setAttack(getAttack()+1);
         setMaxHealth(getMaxHealth()+20);
-        setHealth(getMaxHealth());
+        //setHealth(getMaxHealth());
     }
 
     public void gainExp(int exp){
@@ -79,6 +84,7 @@ public class Player{
         if(health > 0){
             return false;
         }
+        health = 0;
         return true;
     }
 
