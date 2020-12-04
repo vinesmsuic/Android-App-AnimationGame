@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,6 +32,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap bmp;
     private Bitmap bmpHurt;
     private GameThread thread;
+    private GameThread2 thread2;
     private ArrayList<NonPlayerObject> npcs = new ArrayList<NonPlayerObject>();
     private Bitmap bg;
     private int score = 0;
@@ -42,6 +44,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     private int gameLevel1Cleared = 0;
     private int gameLevel2Cleared = 0;
     private int gameLevel3Cleared = 0;
+
+    private MediaPlayer soundPlayer;
+    private MediaPlayer playerHurtPlayer;
 
 
     public Panel(Context context) {
@@ -55,6 +60,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         player = new Player(resizeImage(BitmapFactory.decodeResource(getResources(), R.drawable.chen_fighter),500,500));
 
         thread = new GameThread(getHolder(), this);
+        thread2 = new GameThread2(getHolder(), this);
 
         setFocusable(true);
         spawnRandomMonster(true);
@@ -92,6 +98,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         player.setXLocation(400);
 
         thread = new GameThread(getHolder(), this);
+        thread2 = new GameThread2(getHolder(), this);
 
         setFocusable(true);
         spawnRandomMonster(true);
@@ -105,7 +112,7 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
         Coordinates coords;
         int x, y;
         canvas.drawColor(Color.WHITE);
-        //bg = resizeImage(bg, canvas.getWidth(), canvas.getHeight());
+        bg = resizeImage(bg, getWidth(), 99999999);
         canvas.drawBitmap(bg,0,0,null);
 
 
@@ -121,8 +128,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
         if(killCount > requireKills){
             thread.setRunning(false);
+            thread2.setRunning(false);
 
-            canvas.drawText("CLEAR!", getWidth()/2-100, getHeight()/2, paint);
+            canvas.drawText("CLEAR!", getWidth()/2-50, getHeight()/2, paint);
             TimerTask task = new TimerTask() {
                 public void run() {
                     gameLevelClear();
@@ -135,8 +143,9 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
 
         if(player.isKilled()){
             thread.setRunning(false);
+            thread2.setRunning(false);
 
-            canvas.drawText("GAME OVER", getWidth()/2-100, getHeight()/2, paint);
+            canvas.drawText("GAME OVER", getWidth()/2-50, getHeight()/2, paint);
             TimerTask task = new TimerTask() {
                 public void run() {
                     gameOver();
@@ -178,6 +187,21 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                         if(gX <= x && x <= (gX + gW) && gY <= y && y <= (gY + gH)){
                             score+=1;
                             n.receivedDmg(player.getAttack());
+
+                            if(soundPlayer == null)
+                            {
+                                soundPlayer = MediaPlayer.create(context, R.raw.sword5);
+                                soundPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                    @Override
+                                    public void onCompletion(MediaPlayer mp) {
+                                        if(soundPlayer != null) {
+                                            soundPlayer.release();
+                                            soundPlayer = null;
+                                        }
+                                    }
+                                });
+                            }
+                            soundPlayer.start();
 
                             TimerTask task = new TimerTask() {
                                 public void run() {
@@ -291,7 +315,24 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
                 movement.toggleYDirection();
                 coord.setY(y + getHeight() - (y+n.getGraphic().getHeight()));
                 if(x > player.getXLocation()-50 && x < (player.getXLocation()+(player.getGraphic().getWidth()/3)))
+                {
+                    if(playerHurtPlayer == null)
+                    {
+                        playerHurtPlayer = MediaPlayer.create(context, R.raw.hurt);
+                        playerHurtPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                if(playerHurtPlayer != null) {
+                                    playerHurtPlayer.release();
+                                    playerHurtPlayer = null;
+                                }
+                            }
+                        });
+                    }
+                    playerHurtPlayer.start();
                     player.setHealth(player.getHealth() - n.getAttack());
+                }
+
 
             } else {
                 coord.setY(y);
@@ -407,15 +448,19 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         thread.setRunning(true);
         thread.start();
+        thread2.setRunning(true);
+        thread2.start();
     }
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         boolean retry = true;
         thread.setRunning(false);
+        thread2.setRunning(false);
         while (retry){
             try {
                 thread.join();
+                thread2.join();
                 retry = false;
             } catch (InterruptedException e) {
                 //keep trying here

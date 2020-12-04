@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Shop extends AppCompatActivity {
+
+    private MediaPlayer soundPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,8 @@ public class Shop extends AppCompatActivity {
                 int health = sharedPreferences.getInt("Health", 100);
                 int gold = sharedPreferences.getInt("Gold", 0);
                 int maxHealth = sharedPreferences.getInt("MaxHealth", 100);
+
+                playSound();
 
                 if(gold - 10 >= 0)
                 {
@@ -89,6 +94,8 @@ public class Shop extends AppCompatActivity {
                 int maxHealth = sharedPreferences.getInt("MaxHealth", 100);
                 int gold = sharedPreferences.getInt("Gold", 0);
 
+                playSound();
+
                 if(gold - 30 >= 0)
                 {
                     maxHealth += 10;
@@ -119,6 +126,8 @@ public class Shop extends AppCompatActivity {
             public void onClick(View v) {
                 int attack = sharedPreferences.getInt("Attack", 1);
                 int gold = sharedPreferences.getInt("Gold", 0);
+
+                playSound();
 
                 if(gold -50 >= 0)
                 {
@@ -161,6 +170,23 @@ public class Shop extends AppCompatActivity {
         startActivity(i);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
+    }
+
+    public void playSound(){
+        if(soundPlayer == null)
+        {
+            soundPlayer = MediaPlayer.create(this, R.raw.coin);
+            soundPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    if(soundPlayer != null) {
+                        soundPlayer.release();
+                        soundPlayer = null;
+                    }
+                }
+            });
+        }
+        soundPlayer.start();
     }
 
 }
